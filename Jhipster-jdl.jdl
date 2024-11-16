@@ -18,7 +18,7 @@ application {
 }
 entity Dispositivo {
   idExterno Long required,
-  codigo String required unique,
+  codigo String required,
   nombre String required,
   descripcion String required,
   precioBase BigDecimal required min(0),
@@ -36,7 +36,7 @@ entity Personalizacion {
 }
 entity Opcion {
   idExterno Long required,
-  codigo String required unique,
+  codigo String required,
   nombre String required,
   descripcion String required,
   precioAdicional BigDecimal required min(0)

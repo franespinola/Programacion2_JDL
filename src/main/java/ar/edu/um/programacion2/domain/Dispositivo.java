@@ -29,7 +29,7 @@ public class Dispositivo implements Serializable {
     private Long idExterno;
 
     @NotNull
-    @Column(name = "codigo", nullable = false, unique = true)
+    @Column(name = "codigo", nullable = false)
     private String codigo;
 
     @NotNull

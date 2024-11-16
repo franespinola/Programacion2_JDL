@@ -176,4 +176,17 @@ public class DispositivoResource {
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }
+
+    @GetMapping("traerDispositivos")
+    public ResponseEntity<List<DispositivoDTO>> traerDispositivos() {
+        LOG.debug("REST request to get a page of Dispositivos");
+        List<DispositivoDTO> dispositivosDTOs = dispositivoService.traerDispositivos();
+
+        // Verificar si la lista de DTOs no está vacía
+        if (dispositivosDTOs.isEmpty()) {
+            LOG.warn("No se encontraron dispositivos DTO");
+        }
+
+        return ResponseEntity.ok().body(dispositivosDTOs);
+    }
 }

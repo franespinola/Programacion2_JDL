@@ -1,6 +1,8 @@
 package ar.edu.um.programacion2.repository;
 
+import ar.edu.um.programacion2.domain.Dispositivo;
 import ar.edu.um.programacion2.domain.Personalizacion;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +11,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface PersonalizacionRepository extends JpaRepository<Personalizacion, Long> {}
+public interface PersonalizacionRepository extends JpaRepository<Personalizacion, Long> {
+    Optional<Personalizacion> findByNombreAndDispositivo(String nombre, Dispositivo dispositivo);
+}
