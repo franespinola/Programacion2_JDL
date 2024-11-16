@@ -1,0 +1,10 @@
+{
+  "servidorApiApp": {
+    "Moneda": {
+      "null": "",
+      "ARS": "ARS",
+      "USD": "USD",
+      "EUR": "EUR"
+    }
+  }
+}

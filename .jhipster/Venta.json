@@ -1,0 +1,45 @@
+{
+  "annotations": {
+    "changelogDate": "20241116135710"
+  },
+  "applications": ["servidorApi"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "fechaVenta",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "precioFinal",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    }
+  ],
+  "name": "Venta",
+  "pagination": "infinite-scroll",
+  "relationships": [
+    {
+      "otherEntityName": "dispositivo",
+      "relationshipName": "dispositivo",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "personalizacion",
+      "relationshipName": "personalizaciones",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityName": "adicional",
+      "relationshipName": "adicionales",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

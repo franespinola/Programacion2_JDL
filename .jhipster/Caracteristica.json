@@ -1,0 +1,37 @@
+{
+  "annotations": {
+    "changelogDate": "20241116135310"
+  },
+  "applications": ["servidorApi"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "idExterno",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "nombre",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "descripcion",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "name": "Caracteristica",
+  "pagination": "infinite-scroll",
+  "relationships": [
+    {
+      "otherEntityName": "dispositivo",
+      "relationshipName": "dispositivo",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}
