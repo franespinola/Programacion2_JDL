@@ -13,6 +13,7 @@ import ar.edu.um.programacion2.repository.VentaRepository;
 import ar.edu.um.programacion2.service.dto.VentaDTO;
 import ar.edu.um.programacion2.service.dto.VentaRequest;
 import ar.edu.um.programacion2.service.mapper.VentaMapper;
+import jakarta.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,15 +41,18 @@ public class VentaService {
 
     private final VentaRepository ventaRepository;
     private final VentaMapper ventaMapper;
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
+    private WebClient webClient;
     private final DispositivoRepository dispositivoRepository;
     private final PersonalizacionRepository personalizacionRepository;
     private final OpcionRepository opcionRepository;
     private final AdicionalRepository adicionalRepository;
 
-    // Token de autorización para el servicio externo
-    private static final String TOKEN =
-        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmcmFuY2lzY28iLCJleHAiOjE3Mzk1NjM0ODYsImF1dGgiOiJST0xFX1VTRVIiLCJpYXQiOjE3MzA5MjM0ODZ9.FKX6gcguzQrRjosFJO_tex08Eu3UeDePJzNVTF8zn3Q1JsiriUX4LnobwU24Z8J0LBUSaAsy7P5C7vEbpcR7Pw";
+    @Value("${SERVICE_BASE_URL}")
+    private String baseUrl;
+
+    @Value("${SERVICE_API_TOKEN}")
+    private String apiToken;
 
     public VentaService(
         VentaRepository ventaRepository,
@@ -60,11 +65,17 @@ public class VentaService {
     ) {
         this.ventaRepository = ventaRepository;
         this.ventaMapper = ventaMapper;
+        this.webClientBuilder = webClientBuilder;
         this.dispositivoRepository = dispositivoRepository;
         this.personalizacionRepository = personalizacionRepository;
         this.opcionRepository = opcionRepository;
         this.adicionalRepository = adicionalRepository;
-        this.webClient = webClientBuilder.baseUrl("http://10.145.1.1:8080/api/catedra").build();
+    }
+
+    @PostConstruct
+    public void initWebClient() {
+        LOG.info("Inicializando WebClient con Base URL: {}", baseUrl);
+        this.webClient = webClientBuilder.baseUrl(baseUrl).defaultHeader("Authorization", "Bearer " + apiToken).build();
     }
 
     /**
@@ -291,14 +302,13 @@ public class VentaService {
         // Enviar la solicitud al servicio externo
         webClient
             .post()
-            .uri("http://10.145.1.1:8080/api/catedra/vender")
-            .header("Authorization", "Bearer " + TOKEN)
+            .uri("/vender")
             .bodyValue(requestBody)
             .retrieve()
             .bodyToMono(String.class)
-            .doOnSuccess(response -> System.out.println("Venta registrada exitosamente en el servicio externo: " + response))
+            .doOnSuccess(response -> LOG.info("Venta registrada exitosamente en el servicio externo: {}", response))
             .doOnError(WebClientResponseException.class, error ->
-                System.err.println("Error al registrar la venta en el servicio externo: " + error.getResponseBodyAsString())
+                LOG.error("Error al registrar la venta en el servicio externo: {}", error.getResponseBodyAsString())
             )
             .subscribe();
     }

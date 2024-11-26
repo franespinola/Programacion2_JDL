@@ -14,12 +14,14 @@ import ar.edu.um.programacion2.repository.PersonalizacionRepository;
 import ar.edu.um.programacion2.service.dto.DispositivoDTO;
 import ar.edu.um.programacion2.service.dto.DispositivoExternoDTO;
 import ar.edu.um.programacion2.service.mapper.DispositivoMapper;
+import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -38,18 +40,19 @@ public class DispositivoService {
     private static final Logger LOG = LoggerFactory.getLogger(DispositivoService.class);
 
     private final DispositivoRepository dispositivoRepository;
-
     private final DispositivoMapper dispositivoMapper;
-
     private final CaracteristicaRepository caracteristicaRepository;
-
     private final PersonalizacionRepository personalizacionRepository;
-
     private final OpcionRepository opcionRepository;
-
     private final AdicionalRepository adicionalRepository;
-
     private final WebClient.Builder webClientBuilder;
+    private WebClient webClient;
+
+    @Value("${SERVICE_BASE_URL}")
+    private String baseUrl;
+
+    @Value("${SERVICE_API_TOKEN}")
+    private String apiToken;
 
     public DispositivoService(
         DispositivoRepository dispositivoRepository,
@@ -67,6 +70,12 @@ public class DispositivoService {
         this.opcionRepository = opcionRepository;
         this.adicionalRepository = adicionalRepository;
         this.webClientBuilder = webClientBuilder;
+    }
+
+    @PostConstruct
+    public void initWebClient() {
+        LOG.info("Inicializando WebClient con Base URL: {}", baseUrl);
+        this.webClient = webClientBuilder.baseUrl(baseUrl).defaultHeader("Authorization", "Bearer " + apiToken).build();
     }
 
     /**
@@ -159,14 +168,11 @@ public class DispositivoService {
     }
 
     public List<DispositivoDTO> traerDispositivos() {
-        String token =
-            "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmcmFuY2lzY28iLCJleHAiOjE3Mzk1NjM0ODYsImF1dGgiOiJST0xFX1VTRVIiLCJpYXQiOjE3MzA5MjM0ODZ9.FKX6gcguzQrRjosFJO_tex08Eu3UeDePJzNVTF8zn3Q1JsiriUX4LnobwU24Z8J0LBUSaAsy7P5C7vEbpcR7Pw";
-        WebClient webClient = webClientBuilder.build();
+        LOG.info("Realizando solicitud GET al servicio externo para obtener dispositivos.");
 
         Mono<DispositivoExternoDTO[]> response = webClient
             .get()
-            .uri("http://10.145.1.1:8080/api/catedra/dispositivos")
-            .header("Authorization", "Bearer " + token)
+            .uri("/dispositivos") // Endpoint relativo combinado con baseUrl
             .retrieve()
             .bodyToMono(DispositivoExternoDTO[].class);
 

@@ -27,3 +27,6 @@ services:
     extends:
       file: ./mysql.yml
       service: mysql
+  external-service:
+    base-url: ${SERVICE_BASE_URL:http://default-url.com/api/catedra}
+    api-token: ${SERVICE_API_TOKEN:default-token}
