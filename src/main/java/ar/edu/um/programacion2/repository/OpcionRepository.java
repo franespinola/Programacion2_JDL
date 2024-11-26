@@ -2,6 +2,7 @@ package ar.edu.um.programacion2.repository;
 
 import ar.edu.um.programacion2.domain.Opcion;
 import ar.edu.um.programacion2.domain.Personalizacion;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
@@ -13,4 +14,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OpcionRepository extends JpaRepository<Opcion, Long> {
     Optional<Opcion> findByCodigoAndPersonalizacion(String codigo, Personalizacion personalizacion);
+    List<Opcion> findByPersonalizacionId(Long personalizacionId);
 }

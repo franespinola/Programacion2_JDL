@@ -151,7 +151,7 @@ public class DispositivoService {
 
     //sincronizacion periodica
 
-    @Scheduled(fixedRate = 600000)
+    @Scheduled(fixedRate = 120000)
     public void sincronizarDispositivos() {
         LOG.info("Iniciando sincronización periódica de dispositivos...");
         traerDispositivos(); // Llama al método para obtener y guardar dispositivos

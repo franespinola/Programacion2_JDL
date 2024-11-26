@@ -1,8 +1,10 @@
 package ar.edu.um.programacion2.web.rest;
 
+import ar.edu.um.programacion2.domain.Venta;
 import ar.edu.um.programacion2.repository.VentaRepository;
 import ar.edu.um.programacion2.service.VentaService;
 import ar.edu.um.programacion2.service.dto.VentaDTO;
+import ar.edu.um.programacion2.service.dto.VentaRequest;
 import ar.edu.um.programacion2.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -184,5 +186,11 @@ public class VentaResource {
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @PostMapping("/vender")
+    public ResponseEntity<Venta> registrarVenta(@RequestBody VentaRequest request) {
+        Venta venta = ventaService.registrarVenta(request);
+        return ResponseEntity.ok(venta);
     }
 }
