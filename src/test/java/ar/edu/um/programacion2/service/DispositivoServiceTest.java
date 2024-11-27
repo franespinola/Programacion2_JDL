@@ -113,7 +113,6 @@ class DispositivoServiceTest {
             return dispositivosDTO;
         });
 
-        // Llamar al método bajo prueba
         List<DispositivoDTO> result = dispositivoService.traerDispositivos();
 
         // Verificar resultados
@@ -133,7 +132,4 @@ class DispositivoServiceTest {
         verify(opcionRepository, never()).save(any(Opcion.class));
         verify(adicionalRepository, never()).save(any(Adicional.class));
     }
-    // Puedes agregar más tests para cubrir diferentes casos, como cuando el dispositivo ya existe,
-    // cuando hay características, personalizaciones, opciones y adicionales, etc.
-
 }

@@ -209,7 +209,7 @@ public class DispositivoService {
 
             Dispositivo dispositivoGuardado = dispositivoRepository.save(dispositivo);
 
-            // 4. Sincronizar características
+            // 4. Sincronizar características(con los datos externos)
             for (DispositivoExternoDTO.CaracteristicaDTO caracteristicaDTO : dispositivoExterno.getCaracteristicas()) {
                 Caracteristica caracteristica = caracteristicaRepository
                     .findByNombreAndDispositivo(caracteristicaDTO.getNombre(), dispositivoGuardado)
@@ -221,7 +221,7 @@ public class DispositivoService {
                 caracteristicaRepository.save(caracteristica);
             }
 
-            // 5. Sincronizar personalizaciones y opciones
+            // 5. Sincronizar personalizaciones y opciones (con los datos externos)
             for (DispositivoExternoDTO.PersonalizacionDTO personalizacionDTO : dispositivoExterno.getPersonalizaciones()) {
                 Personalizacion personalizacion = personalizacionRepository
                     .findByNombreAndDispositivo(personalizacionDTO.getNombre(), dispositivoGuardado)
@@ -232,7 +232,7 @@ public class DispositivoService {
                 personalizacion.setDispositivo(dispositivoGuardado);
                 Personalizacion personalizacionGuardada = personalizacionRepository.save(personalizacion);
 
-                // Sincronizar opciones de la personalización
+                // Sincronizar opciones de la personalización (con los datos externos)
                 for (DispositivoExternoDTO.OpcionDTO opcionDTO : personalizacionDTO.getOpciones()) {
                     Opcion opcion = opcionRepository
                         .findByCodigoAndPersonalizacion(opcionDTO.getCodigo(), personalizacionGuardada)
@@ -247,7 +247,7 @@ public class DispositivoService {
                 }
             }
 
-            // 6. Sincronizar adicionales
+            // 6. Sincronizar adicionales (con los datos externos)
             for (DispositivoExternoDTO.AdicionalDTO adicionalDTO : dispositivoExterno.getAdicionales()) {
                 Adicional adicional = adicionalRepository
                     .findByNombreAndDispositivo(adicionalDTO.getNombre(), dispositivoGuardado)

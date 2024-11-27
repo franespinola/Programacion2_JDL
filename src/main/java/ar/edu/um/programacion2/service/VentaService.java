@@ -16,6 +16,7 @@ import ar.edu.um.programacion2.service.mapper.VentaMapper;
 import jakarta.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -296,8 +297,10 @@ public class VentaService {
         requestBody.put("adicionales", adicionales);
 
         // Agregar precio final y fecha de venta
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME; //tuve q formatearla pq sino no andaba
         requestBody.put("precioFinal", venta.getPrecioFinal());
-        requestBody.put("fechaVenta", venta.getFechaVenta().toString());
+        requestBody.put("fechaVenta", venta.getFechaVenta().format(formatter));
+        LOG.info("Cuerpo de la solicitud enviada al servicio externo: {}", requestBody);
 
         // Enviar la solicitud al servicio externo
         webClient
